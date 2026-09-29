@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f6f8f7">
+  <meta name="description" content="A privacy-first browser meeting assistant for reading the room vibe.">
+  <title>RoomPulse · Standalone AI Meeting Assistant</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23173c38'/%3E%3Cpath d='M18 36c0-10 6-17 14-17s14 7 14 17' fill='none' stroke='%23d6f36b' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='37' r='4' fill='%23ff9078'/%3E%3C/svg%3E">
+  <style>
+    :root{--paper:#f6f8f7;--ink:#173c38;--muted:rgba(23,60,56,.56);--moss:#527a42;--lime:#d6f36b;--coral:#ff9078;--line:rgba(23,60,56,.09);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:var(--paper);font-synthesis:none;text-rendering:optimizeLegibility}*{box-sizing:border-box}html{scroll-behavior:smooth}body{min-width:320px;min-height:100vh;margin:0;background:radial-gradient(circle at 92% 4%,rgba(214,243,107,.16),transparent 24rem),var(--paper)}button,a{font:inherit;-webkit-tap-highlight-color:transparent}button{cursor:pointer}button:focus-visible,a:focus-visible{outline:3px solid rgba(82,122,66,.45);outline-offset:3px}[hidden]{display:none!important}.app-shell{min-height:100vh}.topbar{position:sticky;z-index:10;top:0;border-bottom:1px solid var(--line);background:rgba(246,248,247,.9);backdrop-filter:blur(18px)}.topbar-inner{display:flex;align-items:center;justify-content:space-between;width:min(100% - 2.5rem,1440px);height:4.5rem;margin:auto}.brand{display:inline-flex;align-items:center;gap:.75rem;color:var(--ink);text-decoration:none;font-size:1.05rem;font-weight:800;letter-spacing:-.04em}.brand>span:last-child span{color:var(--moss)}.brand-mark{position:relative;display:inline-flex;width:2.15rem;height:2.15rem;align-items:center;justify-content:center;overflow:hidden;border-radius:.7rem;background:var(--ink)}.brand-mark i,.brand-mark b{position:absolute;top:.62rem;width:1.55rem;height:1.15rem;border:2px solid var(--lime);border-bottom:0;border-radius:999px 999px 0 0}.brand-mark b{top:.83rem;width:.95rem;height:.72rem;border-color:var(--paper)}.brand-mark em{position:absolute;bottom:.47rem;width:.25rem;height:.25rem;border-radius:50%;background:var(--coral)}.desktop-nav{display:flex;align-items:center;gap:.25rem;padding:.35rem;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.65)}.desktop-nav a,.mobile-nav a{padding:.6rem 1rem;border-radius:999px;color:rgba(23,60,56,.56);font-size:.78rem;font-weight:700;text-decoration:none;transition:.18s}.desktop-nav a:hover,.mobile-nav a:hover{background:rgba(23,60,56,.05);color:var(--ink)}.desktop-nav a.active{background:var(--ink);color:var(--paper);box-shadow:0 3px 10px rgba(23,60,56,.12)}.top-actions{display:flex;align-items:center;gap:.75rem}.edge-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.55rem .8rem;border:1px solid rgba(82,122,66,.2);border-radius:999px;background:rgba(232,240,220,.7);color:#31552d;font-size:.7rem;font-weight:700}.edge-badge i,.status-title i,.section-kicker i{display:inline-block;width:.4rem;height:.4rem;border-radius:50%;background:var(--moss);box-shadow:0 0 0 4px rgba(110,153,84,.12)}.header-action,.button,.stage-button{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;border:0;border-radius:999px;font-weight:700;transition:.18s}.header-action{min-height:2.25rem;padding:.5rem .9rem;background:var(--lime);color:var(--ink);font-size:.72rem}.header-action:hover,.button:hover,.stage-button:hover:not(:disabled){transform:translateY(-1px)}.menu-button{display:none;width:2.25rem;height:2.25rem;border:0;border-radius:50%;background:transparent;color:var(--ink);font-size:1.2rem}.mobile-nav{display:none;padding:.5rem 1rem 1rem;border-top:1px solid var(--line)}.mobile-nav a{display:block}.page{width:min(100% - 2.5rem,1440px);margin:auto;padding:2.5rem 0 3.5rem}.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:2rem;margin-bottom:2.25rem}.eyebrow{display:flex;flex-wrap:wrap;align-items:center;gap:.65rem;margin:0 0 .8rem;color:rgba(23,60,56,.42);font-size:.68rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase}.eyebrow i{width:.25rem;height:.25rem;border-radius:50%;background:var(--coral)}h1,h2,h3,p{margin-top:0}h1{max-width:52rem;margin-bottom:0;font-size:clamp(2.35rem,5vw,4.75rem);font-weight:800;line-height:.96;letter-spacing:-.075em}.highlight{position:relative;display:inline-block;isolation:isolate}.highlight ins{position:absolute;right:-.03em;bottom:-.16em;left:-.03em;z-index:-1;height:.18em;border-radius:999px;background:var(--lime);transform:rotate(-2deg)}.hero-actions{position:relative;display:flex;gap:.75rem;padding-bottom:.25rem}.button{padding:.75rem 1rem;font-size:.78rem}.button.primary{background:var(--ink);color:var(--paper);box-shadow:0 .5rem 1rem rgba(23,60,56,.12)}.button.secondary{border:1px solid rgba(23,60,56,.12);background:rgba(255,255,255,.55);color:rgba(23,60,56,.7)}.button:disabled,.stage-button:disabled{cursor:wait;opacity:.55}.preferences{position:absolute;z-index:3;top:3.25rem;right:0;width:16rem;padding:1rem;border:1px solid var(--line);border-radius:1rem;background:#fff;box-shadow:0 1rem 2.5rem rgba(23,60,56,.15);color:var(--muted);font-size:.75rem;line-height:1.5}.preferences strong{display:block;margin-bottom:.35rem;color:var(--ink)}.preferences p{margin-bottom:0}.status-strip{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem;margin-bottom:2rem;padding:.9rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--muted);font-size:.75rem}.status-title{display:inline-flex;align-items:center;gap:.5rem;margin-right:.25rem;color:rgba(23,60,56,.65);font-weight:700}.status-chip,.pill{display:inline-flex;align-items:center;gap:.4rem;border:1px solid var(--line);border-radius:999px}.status-chip{padding:.35rem .65rem;background:rgba(255,255,255,.48)}.pill{padding:.42rem .7rem;font-size:.63rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}.pill.neutral{background:rgba(23,60,56,.05);color:var(--muted)}.pill.lime{border-color:rgba(182,217,75,.4);background:rgba(214,243,107,.35);color:#31552d}.pill.coral{border-color:rgba(255,144,120,.35);background:rgba(255,217,204,.5);color:#a4483a}
+    .dashboard{display:flex;flex-direction:column}.dashboard-body{display:flex;flex:1;flex-direction:column}.signal-card{display:flex;justify-content:space-between;gap:1rem;margin-bottom:1.75rem;padding:1.25rem;border:1px solid var(--line);border-radius:1.2rem;background:rgba(232,240,220,.45)}.mini-label{margin-bottom:.5rem;color:rgba(23,60,56,.45);font-size:.65rem;font-weight:800;letter-spacing:.15em;text-transform:uppercase}.signal-card h3{margin-bottom:.45rem;font-size:clamp(1.5rem,3vw,2.2rem);letter-spacing:-.07em}.signal-card p:last-child{margin-bottom:0;color:var(--muted);font-size:.75rem}.signal-icon{display:flex;width:2.8rem;height:2.8rem;flex:0 0 auto;align-items:center;justify-content:center;border-radius:1rem;background:rgba(255,255,255,.75);color:var(--moss);font-size:1.5rem}.metric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem}.metric-grid>div{padding:1rem .5rem;border:1px solid var(--line);border-radius:1rem;background:rgba(255,255,255,.55);text-align:center}.metric-grid span{display:block;color:rgba(23,60,56,.4);font-size:.6rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.metric-grid b{display:block;margin:.5rem 0 .65rem;font-size:1.5rem}.metric-grid i{display:block;width:.4rem;height:.4rem;margin:auto;border-radius:50%}.metric-grid i.moss{background:#6e9954}.metric-grid i.coral{background:var(--coral)}.metric-grid i.ink{background:rgba(23,60,56,.3)}.timeline-placeholder{display:flex;min-height:8rem;flex:1;flex-direction:column;align-items:center;justify-content:center;margin-top:1.5rem;padding:1.5rem;border:1px dashed rgba(23,60,56,.14);border-radius:1rem;background-image:linear-gradient(rgba(23,60,56,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(23,60,56,.035) 1px,transparent 1px);background-size:2rem 2rem;text-align:center}.timeline-placeholder>span{display:flex;width:2.25rem;height:2.25rem;align-items:center;justify-content:center;margin-bottom:.75rem;border-radius:50%;background:rgba(23,60,56,.05);color:rgba(23,60,56,.35)}.timeline-placeholder strong{color:rgba(23,60,56,.6);font-size:.85rem}.timeline-placeholder p{margin:.3rem 0 0;color:rgba(23,60,56,.4);font-size:.72rem}.dashboard-footer{display:flex;justify-content:space-between;margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--line);color:rgba(23,60,56,.4);font-size:.65rem;font-weight:700}.page-footer{display:flex;justify-content:space-between;gap:1rem;margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--line);color:rgba(23,60,56,.4);font-size:.75rem}@keyframes pulse{50%{opacity:.45}}@media(max-width:1100px){.workspace-grid{grid-template-columns:1fr}.dashboard-body{min-height:25rem}}@media(max-width:760px){.topbar-inner,.page{width:min(100% - 2rem,1440px)}.desktop-nav,.edge-badge{display:none}.menu-button{display:inline-block}.mobile-nav{display:block}.hero{align-items:flex-start;flex-direction:column}.hero-actions{width:100%}.hero-actions .button{flex:1}.optional-chip{display:none}.video-stage{min-height:20rem}.steps{grid-template-columns:1fr}.page-footer{flex-direction:column}.status-strip{align-items:flex-start}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+    .expression-panel{margin-top:1.5rem;padding:1rem;border:1px solid var(--line);border-radius:1rem;background:rgba(255,255,255,.45)}
+    .expression-panel__header{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:.75rem;color:rgba(23,60,56,.55);font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+    .expression-panel__header small{color:rgba(23,60,56,.4);font-size:.62rem;font-weight:600;letter-spacing:0;text-transform:none}
+    .expression-list{display:grid;gap:.45rem}
+    .expression-row{display:grid;grid-template-columns:5.3rem 1fr 2.7rem;align-items:center;gap:.55rem;color:rgba(23,60,56,.6);font-size:.68rem}
+    .expression-row__track{height:.42rem;overflow:hidden;border-radius:999px;background:rgba(23,60,56,.08)}
+    .expression-row__bar{display:block;width:0;height:100%;border-radius:inherit;background:var(--moss);transition:width .2s ease}
+    .expression-row:nth-child(2) .expression-row__bar{background:var(--coral)}
+    .expression-row:nth-child(3) .expression-row__bar{background:#8d9bd8}.expression-row:nth-child(4) .expression-row__bar{background:#d36b6b}.expression-row:nth-child(5) .expression-row__bar{background:#b28bd4}.expression-row:nth-child(6) .expression-row__bar{background:#d49a58}.expression-row:nth-child(7) .expression-row__bar{background:#62a6a0}
+    .expression-row__value{text-align:right;font-variant-numeric:tabular-nums;font-weight:800}
+    .expression-row.is-dominant{color:var(--ink);font-weight:800}.expression-row.is-dominant .expression-row__bar{box-shadow:0 0 0 3px rgba(214,243,107,.22)}
+    .workspace-grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(20rem,.8fr);align-items:stretch;gap:1.5rem}
+    .panel{overflow:hidden;border:1px solid var(--line);border-radius:1.25rem;background:rgba(255,255,255,.58);box-shadow:0 1.5rem 4rem rgba(23,60,56,.045)}
+    .camera-panel{min-width:0}
+    .panel-header{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.25rem 1.5rem;border-bottom:1px solid var(--line)}
+    .panel-header h2{margin:0;font-size:1.25rem;letter-spacing:-.04em}
+    .panel-body{padding:1.5rem}
+    .video-stage{position:relative;isolation:isolate;display:flex;width:100%;min-height:20rem;aspect-ratio:16/9;align-items:center;justify-content:center;overflow:hidden;border-radius:1.25rem;background:#0c2522;color:var(--paper)}
+    .video-stage video,.video-stage canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+    .video-stage video{z-index:0}
+    .video-stage canvas{z-index:2;pointer-events:none}
+    .stage-glow{position:absolute;z-index:1;border-radius:50%;filter:blur(2px);opacity:.55;pointer-events:none}
+    .glow-one{top:-8rem;right:-4rem;width:19rem;height:19rem;background:radial-gradient(circle,rgba(110,153,84,.4),transparent 68%)}
+    .glow-two{bottom:-10rem;left:-6rem;width:24rem;height:24rem;background:radial-gradient(circle,rgba(255,144,120,.24),transparent 68%)}
+    .stage-content{position:relative;z-index:3;display:flex;max-width:24rem;flex-direction:column;align-items:center;padding:2rem;text-align:center}
+    .stage-footer{position:absolute;z-index:4;right:1.25rem;bottom:1rem;left:1.25rem;display:flex;justify-content:space-between;gap:1rem;color:rgba(246,248,247,.65);font-size:.65rem;font-weight:700;text-transform:uppercase}
+    @media(max-width:900px){.workspace-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="#workspace" aria-label="RoomPulse home">
+          <span class="brand-mark" aria-hidden="true"><i></i><b></b><em></em></span>
+          <span>room<span>pulse</span></span>
+        </a>
+        <nav class="desktop-nav" aria-label="Primary navigation">
+          <a class="active" href="#workspace">Overview</a>
+          <a href="#camera-panel">Live session</a>
+          <a href="#dashboard">History</a>
+        </nav>
+        <div class="top-actions">
+          <span class="edge-badge"><i></i> Edge mode on</span>
+          <button class="menu-button" id="menuButton" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
+          <button class="header-action" id="headerAction" type="button">Start camera</button>
+        </div>
+      </div>
+      <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation" hidden>
+        <a href="#workspace">Overview</a><a href="#camera-panel">Live session</a><a href="#dashboard">History</a>
+      </nav>
+    </header>
+
+    <main class="page" id="workspace">
+      <section class="hero">
+        <div>
+          <p class="eyebrow"><span>Tuesday, October 14, 2025</span><i></i><span>Good morning, Jordan</span></p>
+          <h1>Make space for <span class="highlight">better<ins></ins></span> conversations.</h1>
+        </div>
+        <div class="hero-actions">
+          <button class="button secondary" id="preferencesButton" type="button">⚙ Preferences</button>
+          <button class="button primary" id="mainAction" type="button">▶ Start a session</button>
+          <div class="preferences" id="preferencesPanel" hidden>
+            <strong>Privacy defaults</strong>
+            <p>Camera frames stay in this browser. Face detection samples four times per second.</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="status-strip" aria-label="Workspace status">
+        <span class="status-title"><i></i> Workspace status</span>
+        <span class="status-chip" id="cameraChip">▣ No camera connected</span>
+        <span class="status-chip" id="sessionChip">◷ Last session: Never</span>
+        <span class="status-chip optional-chip">♙ Solo workspace</span>
+      </div>
+
+      <section class="workspace-grid">
+        <article class="panel camera-panel" id="camera-panel">
+          <header class="panel-header">
+            <div><p class="section-kicker"><i></i> Live workspace</p><h2>Room camera</h2></div>
+            <span class="pill neutral" id="cameraPill">Camera off</span>
+          </header>
+          <div class="panel-body">
+            <div class="video-stage" id="videoStage">
+              <video id="video" autoplay playsinline muted></video>
+              <canvas id="overlay" aria-label="Face detection overlay"></canvas>
+              <div class="stage-glow glow-one"></div><div class="stage-glow glow-two"></div>
+              <div class="stage-content" id="stageContent">
+                <div class="stage-icon" id="stageIcon">▣</div>
+                <p class="stage-kicker" id="stageKicker">Local camera preview</p>
+                <h3>Your room, kept private.</h3>
+                <p class="stage-copy" id="stageCopy">Connect your camera to begin local face tracking. Frames never leave this device.</p>
+                <button class="stage-button" id="stageAction" type="button">▣ Connect camera</button>
+              </div>
+              <div class="stage-footer"><span id="previewLabel">Preview placeholder</span><span id="frameLabel">0 frames analyzed</span></div>
+            </div>
+            <div class="error-box" id="errorBox" role="alert" hidden></div>
+            <div class="steps" aria-label="Processing pipeline">
+              <div><b class="done" id="cameraStep">✓</b><span>Camera</span><em id="cameraStepLabel">Next</em></div>
+              <div><b id="detectorStep">2</b><span>Face detection</span><em id="detectorStepLabel">Next</em></div>
+              <div><b id="emotionStep">3</b><span>Expression model</span><em id="emotionStepLabel">Coming next</em></div>
+            </div>
+          </div>
+        </article>
+
+        <aside class="panel dashboard" id="dashboard">
+          <header class="panel-header"><div><p class="section-kicker">⌁ Room vibe</p><h2>Meeting pulse</h2></div><span class="pill neutral" id="dashboardPill">Offline preview</span></header>
+          <div class="panel-body dashboard-body">
+            <div class="signal-card"><div><p class="mini-label">Overall signal</p><h3 id="signalTitle">Ready when you are</h3><p id="signalCopy">Connect a camera to begin.</p></div><span class="signal-icon">⌁</span></div>
+            <div class="metric-grid"><div><span>Expression</span><b id="expressionValue">—</b><i class="moss"></i></div><div><span>Positive expr.</span><b id="positiveValue">—</b><i class="coral"></i></div><div><span>Tension proxy</span><b id="tensionValue">—</b><i class="ink"></i></div></div>
+            <div class="expression-panel" aria-live="polite"><div class="expression-panel__header"><span>Seven-class output</span><small id="expressionSample">Waiting for a face</small></div><div class="expression-list" id="expressionList"></div></div>
+            <div class="timeline-placeholder"><span>⌁</span><strong id="timelineTitle">Your timeline starts here</strong><p id="timelineCopy">Live emotion trends will appear after camera setup.</p></div>
+            <div class="dashboard-footer"><span>◷ Last 30 minutes</span><span>Data stays local</span></div>
+          </div>
+        </aside>
+      </section>
+
+      <footer class="page-footer"><span>RoomPulse is a calm layer of awareness, not a scorecard.</span><span>♢ Edge processing enabled</span></footer>
+    </main>
+  </div>
+  <noscript>This standalone application needs JavaScript enabled.</noscript>
+  <script type="module">
+    const $ = (id) => document.getElementById(id)
+    const video = $('video')
+    const canvas = $('overlay')
+    const stage = $('videoStage')
+    const stageContent = $('stageContent')
+    const mainAction = $('mainAction')
+    const headerAction = $('headerAction')
+    const stageAction = $('stageAction')
+    const errorBox = $('errorBox')
+    const WASM_URL = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.0.1/wasm'
+    const MODEL_URL = 'https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite'
+    const SAMPLE_INTERVAL = 250
+    const EXPRESSION_LABELS = ['neutral', 'happy', 'sad', 'angry', 'fearful', 'disgusted', 'surprised']
+    const EXPRESSION_BASE_URL = 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@v0.22.2/weights'
+    const FACE_API_URL = 'https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js'
+    const EXPRESSION_HISTORY_LIMIT = 5
+    const EXPRESSION_INPUT_SIZE = 112
+    const MIN_EXPRESSION_CONFIDENCE = 0.55
+    const MIN_FACE_SIZE = 48
+    let stream = null
+    let detector = null
+    let detectorTimer = null
+    let expressionNet = null
+    let expressionState = 'idle'
+    let expressionHistory = []
+    let expressionBusy = false
+    let faceApiPromise = null
+    let sessionToken = 0
+    let lastTimestamp = -1
+    let faceCount = 0
+    let cameraState = 'idle'
+    let detectorState = 'idle'
+    const expressionCrop = document.createElement('canvas')
+    expressionCrop.width = EXPRESSION_INPUT_SIZE
+    expressionCrop.height = EXPRESSION_INPUT_SIZE
+    const expressionCropContext = expressionCrop.getContext('2d', { willReadFrequently: true })
+
+    function setError(message) { errorBox.textContent = message || ''; errorBox.hidden = !message }
+    function setPill(element, label, tone) { element.textContent = label; element.className = `pill ${tone}` }
+    function setTrackingText(count) {
+      faceCount = Number(count) || 0
+      $('frameLabel').textContent = `${faceCount} ${faceCount === 1 ? 'face' : 'faces'} tracked`
+      if (cameraState === 'active' && detectorState === 'ready' && expressionState !== 'ready') $('signalCopy').textContent = faceCount ? `${faceCount} ${faceCount === 1 ? 'face' : 'faces'} in view.` : 'No face detected yet.'
+    }
+    function renderExpressionRows(values, dominant) {
+      const list = $('expressionList')
+      list.replaceChildren(...EXPRESSION_LABELS.map((label) => {
+        const row = document.createElement('div'); row.className = `expression-row${label === dominant ? ' is-dominant' : ''}`
+        const name = document.createElement('span'); name.textContent = label[0].toUpperCase() + label.slice(1)
+        const track = document.createElement('span'); track.className = 'expression-row__track'
+        const bar = document.createElement('b'); bar.className = 'expression-row__bar'; bar.style.width = `${Math.max(0, Math.min(100, (values[label] || 0) * 100))}%`
+        const value = document.createElement('span'); value.className = 'expression-row__value'; value.textContent = `${Math.round((values[label] || 0) * 100)}%`
+        track.append(bar); row.append(name, track, value); return row
+      }))
+    }
+    function clearExpressionOutput() {
+      const empty = Object.fromEntries(EXPRESSION_LABELS.map((label) => [label, 0]))
+      renderExpressionRows(empty, null)
+      $('expressionValue').textContent = '—'; $('positiveValue').textContent = '—'; $('tensionValue').textContent = '—'; $('expressionSample').textContent = 'Waiting for a face'
+    }
+    function updateExpressionUi(scores, sampleCount) {
+      const entries = EXPRESSION_LABELS.map((label) => ({ label, score: Number(scores[label] || 0) })).sort((a, b) => b.score - a.score)
+      const dominant = entries[0]; const positive = scores.happy + scores.surprised; const tension = scores.angry + scores.fearful + scores.disgusted
+      const confident = dominant.score >= MIN_EXPRESSION_CONFIDENCE
+      renderExpressionRows(scores, confident ? dominant.label : null)
+      $('expressionValue').textContent = confident ? `${dominant.label[0].toUpperCase()}${dominant.label.slice(1)} ${Math.round(dominant.score * 100)}%` : `Uncertain · ${Math.round(dominant.score * 100)}%`
+      $('positiveValue').textContent = `${Math.round(positive * 100)}%`; $('tensionValue').textContent = `${Math.round(tension * 100)}%`; $('expressionSample').textContent = `${sampleCount}/${EXPRESSION_HISTORY_LIMIT} sample rolling average`
+      $('signalTitle').textContent = confident ? `${dominant.label[0].toUpperCase()}${dominant.label.slice(1)} expression` : 'Expression uncertain'; $('signalCopy').textContent = confident ? `${Math.round(dominant.score * 100)}% model confidence · ${faceCount} ${faceCount === 1 ? 'face' : 'faces'} in view` : 'The model is not confident enough to name an expression'; $('timelineTitle').textContent = confident ? `${dominant.label[0].toUpperCase()}${dominant.label.slice(1)} expression detected` : 'No confident expression'; $('timelineCopy').textContent = 'Facial expression is an observable signal, not a direct reading of internal emotion.'
+    }
+    function updateUi() {
+      const active = cameraState === 'active'; const requesting = cameraState === 'requesting'; const failed = cameraState === 'error'
+      stage.classList.toggle('live', active); stageContent.style.display = active ? 'none' : 'flex'
+      if (active) {
+        $('stageIcon').textContent = '◉'; $('stageKicker').textContent = 'Camera connected'; $('stageCopy').textContent = 'Video is processed locally. No frames leave this browser.'
+        stageAction.textContent = '■ Stop camera'; mainAction.textContent = '■ Stop session'; headerAction.textContent = 'Stop live'; $('cameraChip').textContent = '▣ Camera connected'; $('sessionChip').textContent = '◷ Session in progress'; setPill($('cameraPill'), 'Camera live', 'lime')
+      } else {http://127.0.0.1:8080/standalone.html
+        $('stageIcon').textContent = failed ? '!' : '▣'; $('stageKicker').textContent = failed ? 'Camera setup needs attention' : requesting ? 'Connecting camera' : 'Local camera preview'; $('stageCopy').textContent = failed ? (errorBox.textContent || 'Camera could not be started.') : 'Connect your camera to begin local face tracking. Frames never leave this device.'
+        stageAction.textContent = requesting ? '◷ Connecting…' : '▣ Connect camera'; mainAction.textContent = requesting ? '◷ Starting…' : '▶ Start a session'; headerAction.textContent = 'Start camera'; $('cameraChip').textContent = '▣ No camera connected'; $('sessionChip').textContent = '◷ Last session: Never'; setPill($('cameraPill'), failed ? 'Needs attention' : requesting ? 'Connecting' : 'Camera off', failed || requesting ? 'coral' : 'neutral')
+      }
+      const cameraDone = active; $('cameraStep').className = cameraDone ? 'done' : ''; $('cameraStep').textContent = cameraDone ? '✓' : '1'; $('cameraStepLabel').textContent = cameraDone ? 'Live' : 'Next'; $('cameraStepLabel').className = cameraDone ? 'live' : ''
+      const detectorDone = active && detectorState === 'ready'; const detectorLoading = active && detectorState === 'loading'
+      $('detectorStep').className = detectorDone ? 'done' : detectorLoading ? 'loading' : ''; $('detectorStep').textContent = detectorDone ? '✓' : detectorLoading ? '◷' : '2'; $('detectorStepLabel').textContent = detectorDone ? 'Live' : detectorLoading ? 'Loading' : 'Next'; $('detectorStepLabel').className = detectorDone ? 'live' : ''
+      const expressionDone = active && expressionState === 'ready'; const expressionLoading = active && expressionState === 'loading'; const expressionFailed = active && expressionState === 'error'
+      $('emotionStep').className = expressionDone ? 'done' : expressionLoading ? 'loading' : ''; $('emotionStep').textContent = expressionDone ? '✓' : expressionLoading ? '◷' : '3'; $('emotionStepLabel').textContent = expressionDone ? 'Live' : expressionLoading ? 'Loading' : expressionFailed ? 'Unavailable' : 'Coming next'; $('emotionStepLabel').className = expressionDone ? 'live' : ''
+      if (active && expressionDone) { setPill($('dashboardPill'), 'Expression live', 'lime'); if (!expressionHistory.length) { $('signalTitle').textContent = 'Reading expression'; $('signalCopy').textContent = 'Waiting for a stable face sample.' } }
+      else if (active && expressionLoading) { setPill($('dashboardPill'), 'Loading expression', 'coral'); $('signalTitle').textContent = 'Loading expression model'; $('timelineTitle').textContent = 'Preparing expression analysis'; $('timelineCopy').textContent = 'The local seven-class model is loading.' }
+      else if (active && expressionFailed) { setPill($('dashboardPill'), 'Expression unavailable', 'coral'); $('signalTitle').textContent = 'Face tracking only'; $('signalCopy').textContent = 'The expression model could not be loaded.'; $('timelineTitle').textContent = 'Expression model unavailable'; $('timelineCopy').textContent = 'Check the network connection and restart the session.' }
+      else if (active && detectorDone) { setPill($('dashboardPill'), 'Live tracking', 'lime'); $('signalTitle').textContent = 'Reading the room'; $('timelineTitle').textContent = 'Face tracking is active'; $('timelineCopy').textContent = 'Preparing local expression analysis.' }
+      else if (active) { setPill($('dashboardPill'), 'Loading tracker', 'coral'); $('signalTitle').textContent = 'Warming up'; $('timelineTitle').textContent = 'Preparing local detection'; $('timelineCopy').textContent = 'MediaPipe is loading in this browser.' }
+      else { setPill($('dashboardPill'), 'Offline preview', 'neutral'); $('signalTitle').textContent = 'Ready when you are'; $('signalCopy').textContent = 'Connect a camera to begin.'; $('timelineTitle').textContent = 'Your timeline starts here'; $('timelineCopy').textContent = 'Live emotion trends will appear after camera setup.' }
+      $('previewLabel').textContent = active ? 'Live preview · local only' : 'Preview placeholder'; if (!active) $('frameLabel').textContent = '0 frames analyzed'
+    }
+    function loadFaceApi() {
+      if (window.faceapi) return Promise.resolve(window.faceapi)
+      if (faceApiPromise) return faceApiPromise
+      faceApiPromise = new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = FACE_API_URL
+        script.crossOrigin = 'anonymous'
+        script.onload = () => window.faceapi ? resolve(window.faceapi) : reject(new Error('face-api.js loaded without a global API.'))
+        script.onerror = () => reject(new Error('The expression model library could not be loaded.'))
+        document.head.appendChild(script)
+      }).catch((error) => { faceApiPromise = null; throw error })
+      return faceApiPromise
+    }
+    async function ensureExpressionModel(token) {
+      if (expressionNet?.isLoaded) { expressionState = 'ready'; updateUi(); return true }
+      expressionState = 'loading'; updateUi()
+      try {
+        const faceapi = await loadFaceApi()
+        if (token !== sessionToken) return false
+        if (!expressionNet?.isLoaded) await faceapi.loadFaceExpressionModel(EXPRESSION_BASE_URL)
+        if (token !== sessionToken) return false
+        expressionNet = faceapi.nets.faceExpressionNet
+        expressionState = 'ready'; updateUi(); return true
+      } catch (error) {
+        if (token === sessionToken) { expressionState = 'error'; setError(error?.message || 'The expression model could not be loaded.'); updateUi() }
+        return false
+      }
+    }
+    function cropPrimaryFace(boxes) {
+      const primary = boxes.reduce((best, box) => !best || box.width * box.height > best.width * best.height ? box : best, null)
+      if (!primary) return null
+      const padding = Math.max(primary.width, primary.height) * .25
+      const side = Math.max(primary.width, primary.height) + padding * 2
+      const x = Math.max(0, Math.min(video.videoWidth - side, primary.x - padding))
+      const y = Math.max(0, Math.min(video.videoHeight - side, primary.y - padding))
+      const cropSide = Math.min(side, video.videoWidth - x, video.videoHeight - y)
+      expressionCropContext.clearRect(0, 0, EXPRESSION_INPUT_SIZE, EXPRESSION_INPUT_SIZE)
+      expressionCropContext.drawImage(video, x, y, cropSide, cropSide, 0, 0, EXPRESSION_INPUT_SIZE, EXPRESSION_INPUT_SIZE)
+      return primary
+    }
+    async function classifyExpressions(boxes, token) {
+      if (!expressionNet?.isLoaded || expressionBusy || !boxes.length) return
+      expressionBusy = true
+      try {
+        const primary = cropPrimaryFace(boxes)
+        if (!primary || token !== sessionToken) return
+        if (primary.width < MIN_FACE_SIZE || primary.height < MIN_FACE_SIZE) { clearExpressionOutput(); return }
+        const prediction = await expressionNet.predictExpressions(expressionCrop)
+        if (token !== sessionToken) return
+        const scores = Object.fromEntries(EXPRESSION_LABELS.map((label) => [label, Math.max(0, Number(prediction[label] || 0))]))
+        expressionHistory.push(scores); if (expressionHistory.length > EXPRESSION_HISTORY_LIMIT) expressionHistory.shift()
+        const smoothed = Object.fromEntries(EXPRESSION_LABELS.map((label) => [label, expressionHistory.reduce((sum, sample) => sum + sample[label], 0) / expressionHistory.length]))
+        updateExpressionUi(smoothed, expressionHistory.length)
+        const label = EXPRESSION_LABELS.reduce((best, current) => smoothed[current] > smoothed[best] ? current : best, EXPRESSION_LABELS[0])
+        const confidence = Math.max(...Object.values(smoothed))
+        drawBoxes(boxes, confidence >= MIN_EXPRESSION_CONFIDENCE ? `${label} ${Math.round(confidence * 100)}%` : `Uncertain ${Math.round(confidence * 100)}%`)
+      } catch (error) {
+        if (token === sessionToken) { expressionState = 'error'; setError(error?.message || 'Expression inference failed.'); updateUi() }
+      } finally { expressionBusy = false }
+    }
+    function describeCameraError(error) {
+      const name = error && error.name
+      if (name === 'NotAllowedError' || name === 'PermissionDeniedError' || name === 'SecurityError') return 'Camera permission was denied. Allow access in your browser settings and try again.'
+      if (name === 'NotFoundError' || name === 'DevicesNotFoundError') return 'No camera was found. Connect a camera and try again.'
+      if (name === 'NotReadableError' || name === 'TrackStartError') return 'The camera is already in use by another application.'
+      if (name === 'OverconstrainedError') return 'The selected camera does not support the requested video settings.'
+      return 'The camera could not be started. Check your browser and device settings.'
+    }
+    function releaseStream() { if (stream) stream.getTracks().forEach((track) => track.stop()); stream = null; video.srcObject = null }
+    async function startCamera() {
+      if (cameraState === 'active' || cameraState === 'requesting') return
+      if (!navigator.mediaDevices?.getUserMedia) { cameraState = 'error'; setError('Camera access is not available in this browser. Use a modern browser over HTTPS or localhost.'); updateUi(); return }
+      if (!window.isSecureContext && !['localhost', '127.0.0.1', '[::1]'].includes(location.hostname)) { cameraState = 'error'; setError('Camera access requires HTTPS. Serve this file from localhost or HTTPS and try again.'); updateUi(); return }
+      const token = ++sessionToken; cameraState = 'requesting'; setError(''); updateUi()
+      try {
+        const nextStream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } } })
+        if (token !== sessionToken) { nextStream.getTracks().forEach((track) => track.stop()); return }
+        stream = nextStream; video.srcObject = stream; await video.play(); cameraState = 'active'; setError(''); updateUi(); void startDetector(token)
+      } catch (error) { releaseStream(); cameraState = 'error'; setError(describeCameraError(error)); updateUi() }
+    }
+    function stopCamera() {
+      sessionToken += 1
+      if (detectorTimer) window.clearInterval(detectorTimer); detectorTimer = null
+      if (detector) { try { detector.close() } catch {} }
+      detector = null; detectorState = 'idle'; expressionState = 'idle'; expressionHistory = []; clearExpressionOutput(); lastTimestamp = -1; setTrackingText(0); canvas.getContext('2d')?.clearRect(0, 0, canvas.width, canvas.height); releaseStream(); cameraState = 'idle'; setError(''); updateUi()
+    }
+    function drawBoxes(boxes, expressionLabel) {
+      const context = canvas.getContext('2d')
+      if (!context) return
+      context.clearRect(0, 0, canvas.width, canvas.height)
+      if (!boxes.length) return
+      const lineWidth = Math.max(2, Math.round(Math.min(canvas.width, canvas.height) / 180))
+      context.lineWidth = lineWidth; context.strokeStyle = '#d6f36b'; context.fillStyle = '#d6f36b'; context.font = `600 ${Math.max(12, lineWidth * 5)}px sans-serif`
+      boxes.forEach((box, index) => { context.strokeRect(box.x, box.y, box.width, box.height); const label = index === 0 && expressionLabel ? expressionLabel : `${Math.round(box.score * 100)}% face`; context.fillText(label, box.x + lineWidth, Math.max(lineWidth * 5, box.y - lineWidth)) })
+    }
+    async function startDetector(token) {
+      detectorState = 'loading'; updateUi()
+      try {
+        const visionModule = await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.0.1/vision_bundle.mjs')
+        if (token !== sessionToken) return
+        const { FaceDetector, FilesetResolver } = visionModule
+        const fileset = await FilesetResolver.forVisionTasks(WASM_URL)
+        if (token !== sessionToken) return
+        let nextDetector
+        try {
+          nextDetector = await FaceDetector.createFromOptions(fileset, { baseOptions: { delegate: 'GPU', modelAssetPath: MODEL_URL }, minDetectionConfidence: .5, minSuppressionThreshold: .3, runningMode: 'VIDEO' })
+        } catch {
+          nextDetector = await FaceDetector.createFromOptions(fileset, { baseOptions: { delegate: 'CPU', modelAssetPath: MODEL_URL }, minDetectionConfidence: .5, minSuppressionThreshold: .3, runningMode: 'VIDEO' })
+        }
+        if (token !== sessionToken) { nextDetector.close(); return }
+        detector = nextDetector; detectorState = 'ready'; updateUi(); setTrackingText(0); void ensureExpressionModel(token)
+        detectorTimer = window.setInterval(() => {
+          if (token !== sessionToken || !detector || video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA || !video.videoWidth || !video.videoHeight) return
+          if (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight) { canvas.width = video.videoWidth; canvas.height = video.videoHeight }
+          const timestamp = performance.now(); if (timestamp <= lastTimestamp) return; lastTimestamp = timestamp
+          try {
+            const result = detector.detectForVideo(video, timestamp)
+            const boxes = result.detections.flatMap((item) => { const box = item.boundingBox; if (!box) return []; const score = item.categories.reduce((highest, category) => Math.max(highest, category.score), 0); return [{ height: box.height, score, width: box.width, x: box.originX, y: box.originY }] })
+            drawBoxes(boxes); setTrackingText(boxes.length)
+            if (boxes.length && expressionNet?.isLoaded) void classifyExpressions(boxes, token)
+            if (!boxes.length && expressionState === 'ready') { expressionHistory = []; clearExpressionOutput(); drawBoxes(boxes) }
+          } catch (error) { detectorState = 'error'; setError(error?.message || 'Face detection stopped unexpectedly.'); updateUi(); window.clearInterval(detectorTimer); detectorTimer = null }
+        }, SAMPLE_INTERVAL)
+      } catch (error) { if (token === sessionToken) { detectorState = 'error'; setError(error?.message || 'The face detector could not be loaded. Check your network connection.'); updateUi() } }
+    }
+    function toggleCamera() { if (cameraState === 'active') stopCamera(); else void startCamera() }
+    mainAction.addEventListener('click', toggleCamera)
+    headerAction.addEventListener('click', toggleCamera)
+    stageAction.addEventListener('click', toggleCamera)
+    $('preferencesButton').addEventListener('click', () => { $('preferencesPanel').hidden = !$('preferencesPanel').hidden })
+    $('menuButton').addEventListener('click', () => { const nav = $('mobileNav'); nav.hidden = !nav.hidden; $('menuButton').setAttribute('aria-expanded', String(!nav.hidden)) })
+    document.querySelectorAll('.mobile-nav a').forEach((link) => link.addEventListener('click', () => { $('mobileNav').hidden = true; $('menuButton').setAttribute('aria-expanded', 'false') }))
+    window.addEventListener('pagehide', stopCamera)
+    window.addEventListener('beforeunload', stopCamera)
+    clearExpressionOutput()
+    updateUi()
+
+  </script>
+</body>
+</html>
